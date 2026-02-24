@@ -1,0 +1,76 @@
+/* Catppuccin Mocha */
+@define-color base      #1E1E2E;
+@define-color mantle    #181825;
+@define-color crust     #11111B;
+@define-color text      #CDD6F4;
+@define-color subtext0  #A6ADC8;
+@define-color overlay0  #6C7086;
+@define-color surface0  #313244;
+@define-color surface1  #45475A;
+@define-color surface2  #585B70;
+
+@define-color blue      #89B4FA;
+@define-color lavender  #B4BEFE;
+@define-color red       #F38BA8;
+@define-color green     #A6E3A1;
+@define-color yellow    #F9E2AF;
+@define-color pink      #F5C2E7;
+
+* {
+  border: none;
+  border-radius: 10px;
+  font-family: JetBrains Mono, monospace;
+  font-size: 14px;
+  min-height: 0;
+  padding: 0 10px;
+}
+
+window#waybar {
+  background-color: @base;
+  color: @text;
+  margin: 10px;
+  border-radius: 12px;
+  padding: 5px 10px;
+}
+
+#workspaces {
+  background: @surface0;
+  padding: 0 5px;
+}
+
+#workspaces button {
+  color: @subtext0;
+  background: transparent;
+  margin: 0 3px;
+  border-radius: 8px;
+  padding: 0 8px;
+}
+
+#workspaces button.active {
+  background: @blue;
+  color: @base;
+}
+
+#mpd {
+  color: @lavender;
+  background: @surface0;
+}
+
+#cpu,
+#memory,
+#pulseaudio,
+#network,
+#clock {
+  background: @surface0;
+  color: @text;
+  margin: 0 4px;
+}
+
+#pulseaudio.muted {
+  color: @red;
+}
+
+#network.disconnected {
+  color: @red;
+}
+

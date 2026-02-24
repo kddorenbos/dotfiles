@@ -1,0 +1,10 @@
+waybar &
+swww init &
+swww-daemon --format xrgb &
+sww img /ust/share/backgrounds/archlinuc/small.png
+udiskie &
+spotifyd &
+hyprctl dispatch workspace 1 &
+gammastep -l manual:52.396610811891364:5.302530895614405 -t 6500K:4000K &
+shutdown 22:00 &
+#swayidle -w timeout 600 'swaylock -f' timeout 10 'hyprctl dispatch dpms off eDP-1' resume 'hyprctl dispatch dpms on' &
