@@ -123,6 +123,7 @@
    system.autoUpgrade = {
     enable = true;
     flake = "/home/kevin/.nixos/#nixos";
+    dates = "22:00";
     flags = [
       "--update-input"
       "nixpkgs"
@@ -138,16 +139,20 @@
    nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 
-#enable cron service
-	#	services.cron = {
-	#	enable = true;
-	#	systemCronJobs = [
-	#		''
-	#		00 22 * * 1,3,5,6 root rtcwake -m disk -s 36000 && firefox --kiosk monkeytype.com
-	#		00 22 * * 0,2,4 root rtcwake -m disk -s 28800 && firefox --kiosk monkeytype.com
-	#		''
-	#	];
-	#};
+	#enable cron service
+		services.cron = {
+		enable = true;
+		systemCronJobs = [
+	#''
+	#00 22 * * 1,3,5,6 root rtcwake -m disk -s 36000 && firefox --kiosk monkeytype.com
+	#00 22 * * 0,2,4 root rtcwake -m disk -s 28800 && firefox --kiosk monkeytype.com
+	#00 14 * * 0,2,4 root exit
+	#''
+			''
+			45 14 * * * root hyprctl dispatch exit
+			''
+		];
+	};
    
 
 #Packages
@@ -251,9 +256,11 @@
 		pkgs.oterm
 		pkgs.tintin
 		pkgs.cava
-		pkgs.neofetch
+#		pkgs.neofetch
 		pkgs.ardour
 		pkgs.nps
+		pkgs.hyprutils
+		pkgs.calc
 		#		inputs.yt-x.packages."${system}".default
   ];
 
