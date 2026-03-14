@@ -97,7 +97,7 @@
 	programs.k3b.enable = true;
 	virtualisation.docker.enable = true;
 	boot.kernel.sysctl."kernel.sysrq" = 1;
-	rograms.kdeconnect.enable = true;
+	programs.kdeconnect.enable = true;
 	services.journald.extraConfig = 
 		''
 		SystemMaxUse=50M
