@@ -3,23 +3,22 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 
-#settings
+#settings {{{
 
 #imports
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+	imports =
+		[ # Include the results of the hardware scan.
+			./hardware-configuration.nix
+		];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+	# Bootloader.
+	boot.loader.systemd-boot.enable = true;
+	boot.loader.efi.canTouchEfiVariables = true;
 	boot.kernelParams = [ "video=HDMI-A-2:1920x1080@60" ];
 	boot.initrd.availableKernelModules = [ "i915" ];
-
 
 	#graphics
 	hardware.graphics = {
@@ -30,116 +29,108 @@
 			intel-compute-runtime
 		];
 	};
-
 	environment.sessionVariables = {
 		LIBVA_DRIVER_NAME = "iHD";
 	};
-
 	hardware.enableRedistributableFirmware = true;
 
-#networking
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+	#networking
+	networking.hostName = "nixos"; # Define your hostname.
+	# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+	# Configure network proxy if necessary
+	# networking.proxy.default = "http://user:password@proxy:port/";
+	# networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+	# Enable networking
+	networking.networkmanager.enable = true;
 
-  # Enable networking
-  networking.networkmanager.enable = true;
+	#time and localization
+	# Set your time zone.
+	time.timeZone = "Europe/Amsterdam";
 
-#time and localization
-  # Set your time zone.
-  time.timeZone = "Europe/Amsterdam";
+	# Select internationalisation properties.
+	i18n.defaultLocale = "en_US.UTF-8";
+	i18n.extraLocaleSettings = {
+		LC_ADDRESS = "nl_NL.UTF-8";
+		LC_IDENTIFICATION = "nl_NL.UTF-8";
+		LC_MEASUREMENT = "nl_NL.UTF-8";
+		LC_MONETARY = "nl_NL.UTF-8";
+		LC_NAME = "nl_NL.UTF-8";
+		LC_NUMERIC = "nl_NL.UTF-8";
+		LC_PAPER = "nl_NL.UTF-8";
+		LC_TELEPHONE = "nl_NL.UTF-8";
+		LC_TIME = "nl_NL.UTF-8";
+	};
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+	# Configure keymap in X11
+	services.xserver.xkb = {
+		layout = "us";
+		variant = "";
+	};
+	# }}}
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "nl_NL.UTF-8";
-    LC_IDENTIFICATION = "nl_NL.UTF-8";
-    LC_MEASUREMENT = "nl_NL.UTF-8";
-    LC_MONETARY = "nl_NL.UTF-8";
-    LC_NAME = "nl_NL.UTF-8";
-    LC_NUMERIC = "nl_NL.UTF-8";
-    LC_PAPER = "nl_NL.UTF-8";
-    LC_TELEPHONE = "nl_NL.UTF-8";
-    LC_TIME = "nl_NL.UTF-8";
-  };
+	#accounts  {{{
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+	# Define a user account. Don't forget to set a password with ‘passwd’.
+	users.users.kevin = {
+		isNormalUser = true;
+		description = "kevin";
+		extraGroups = [ "networkmanager" "wheel" "cdrom" ];
+		packages = with pkgs; [];
+	};
+	# }}}
 
-
-
-#accounts
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.kevin = {
-    isNormalUser = true;
-    description = "kevin";
-    extraGroups = [ "networkmanager" "wheel" "cdrom" ];
-    packages = with pkgs; [];
-  };
-
-  # system serfices
-   programs.hyprland.enable = true;
-   programs.waybar.enable = true;
-   services.xserver.enable = true;
-   services.displayManager.ly.enable = true;
+	# system serfices {{{
+	programs.hyprland.enable = true;
+	programs.waybar.enable = true;
+	services.xserver.enable = true;
+	services.displayManager.ly.enable = true;
 	#   services.xserver.displayManager.lightdm.enable = true;
 	#   services.xserver.displayManager.lightdm.greeters.slick.enable = true;
 	#	services.xserver.displayManager.lightdm.greeters.slick.extraConfig = ''
 	#	active-monitor=2
 	#	background=/home/kevin/Backgrounds/4K-Beautiful-Desktop-Wallpaper-Colorful-Nature-Sunset-Landscape-Free-Download-2048x1152.jpg
 	#	'';
-   services.udisks2.enable = true;
-   programs.steam.enable = true;
-   services.tlp.enable = true;
-   programs.k3b.enable = true;
-		virtualisation.docker.enable = true;
+	services.udisks2.enable = true;
+	programs.steam.enable = true;
+	services.tlp.enable = true;
+	programs.k3b.enable = true;
+	virtualisation.docker.enable = true;
 	boot.kernel.sysctl."kernel.sysrq" = 1;
-	 programs.kdeconnect.enable = true;
-
-	services.journald.extraConfig = ''
+	rograms.kdeconnect.enable = true;
+	services.journald.extraConfig = 
+		''
 		SystemMaxUse=50M
 		Storage=volatile
 		'';
-
-   hardware.bluetooth.enable = true;
-   hardware.bluetooth.powerOnBoot = true;
-
-
+	hardware.bluetooth.enable = true;
+	hardware.bluetooth.powerOnBoot = true;
 	powerManagement.cpuFreqGovernor = "performance";
+	nixpkgs.config.allowUnfree = true;
+	# }}}
 
+	# system upgrade and garbage collextion{{{
 
-   nixpkgs.config.allowUnfree = true;   
+	system.autoUpgrade = {
+		enable = true;
+		flake = "/home/kevin/.nixos/#nixos";
+		dates = "22:00";
+		flags = [
+			"--update-input"
+			"nixpkgs"
+			"--no-write-lock-file"
+			"-L" # print build logs
+		];
+	};  
 
-# system upgrade and garbage collextion
+	nix.gc.automatic = true;
+	nix.gc.options = "--delete-older-than 7d";
 
-   system.autoUpgrade = {
-    enable = true;
-    flake = "/home/kevin/.nixos/#nixos";
-    dates = "22:00";
-    flags = [
-      "--update-input"
-      "nixpkgs"
-      "--no-write-lock-file"
-      "-L" # print build logs
-    ];
-  };  
+	programs.gamemode.enable = true;
+	nix.settings.experimental-features = [ "nix-command" "flakes" ];
+	# }}}
 
-   nix.gc.automatic = true;
-   nix.gc.options = "--delete-older-than 7d";
-
-   programs.gamemode.enable = true;
-   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-
-	#enable cron service
+	#enable cron service{{{
 		services.cron = {
 		enable = true;
 		systemCronJobs = [
@@ -153,81 +144,80 @@
 			''
 		];
 	};
-   
+	# }}}
 
-#Packages
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    pkgs.neovim
-    pkgs.vimPlugins.vim-wayland-clipboard
-    pkgs.kitty
-    pkgs.mc
-    pkgs.waybar
-    pkgs.firefox
-    pkgs.vimb
-    pkgs.ytfzf
-    pkgs.mpv
-    pkgs.kodi
-    pkgs.pulsemixer
-    pkgs.wofi
-    pkgs.ani-cli
-    pkgs.mov-cli
-    pkgs.mpd
-    pkgs.ncmpcpp
-    pkgs.htop
-    pkgs.lightdm-slick-greeter
-    pkgs.swww
-    pkgs.prismlauncher
-    pkgs.bottles
-    pkgs.udiskie
-    pkgs.udisks2
-    pkgs.logisim
-    pkgs.dosfstools
-    pkgs.libreoffice
-    pkgs.discord
-    pkgs.runelite
-    pkgs.tlp
-    pkgs.cmatrix
-    pkgs.btop
-    pkgs.bluez
-    pkgs.python312Packages.ds4drv
-    pkgs.bleachbit
-    pkgs.lynx
-    pkgs.tmux
-    pkgs.spotdl
-    pkgs.font-awesome
-    pkgs.dunst
-    pkgs.retroarch
-    pkgs.git
-    pkgs.gh
-    pkgs.kdePackages.kdeconnect-kde
-    pkgs.cdrkit
-    pkgs.texliveFull
-    pkgs.zathura
-    pkgs.gcc
-    pkgs.wget
-    pkgs.unzip
-    pkgs.gnumake
-    pkgs.ripgrep
-    #pkgs.python3Full
-    pkgs.lua5_1
-    pkgs.lua51Packages.luarocks
-    pkgs.neovim-node-client
-    pkgs.nodejs_24
-    pkgs.tree-sitter
-    pkgs.wl-clipboard
-    pkgs.fd
-    pkgs.vimPlugins.mason-lspconfig-nvim
-    pkgs.lua51Packages.jsregexp
-    pkgs.mgba
-    pkgs.fzf
-    pkgs.qemu
-    pkgs.kdePackages.k3b
-    pkgs.yt-dlp
-    pkgs.tg
-    pkgs.discordo
+	#Packages{{{
+	# List packages installed in system profile. To search, run:
+	# $ nix search wget
+	environment.systemPackages = with pkgs; [
+		pkgs.neovim
+		pkgs.vimPlugins.vim-wayland-clipboard
+		pkgs.kitty
+		pkgs.mc
+		pkgs.waybar
+		pkgs.firefox
+		pkgs.vimb
+		pkgs.ytfzf
+		pkgs.mpv
+		pkgs.kodi
+		pkgs.pulsemixer
+		pkgs.wofi
+		pkgs.ani-cli
+		pkgs.mov-cli
+		pkgs.mpd
+		pkgs.ncmpcpp
+		pkgs.htop
+		pkgs.lightdm-slick-greeter
+		pkgs.swww
+		pkgs.prismlauncher
+		pkgs.bottles
+		pkgs.udiskie
+		pkgs.udisks2
+		pkgs.logisim
+		pkgs.dosfstools
+		pkgs.libreoffice
+		pkgs.discord
+		pkgs.runelite
+		pkgs.tlp
+		pkgs.cmatrix
+		pkgs.btop
+		pkgs.bluez
+		pkgs.python312Packages.ds4drv
+		pkgs.bleachbit
+		pkgs.lynx
+		pkgs.tmux
+		pkgs.spotdl
+		pkgs.font-awesome
+		pkgs.dunst
+		pkgs.retroarch
+		pkgs.git
+		pkgs.gh
+		pkgs.kdePackages.kdeconnect-kde
+		pkgs.cdrkit
+		pkgs.texliveFull
+		pkgs.zathura
+		pkgs.gcc
+		pkgs.wget
+		pkgs.unzip
+		pkgs.gnumake
+		pkgs.ripgrep
+		#pkgs.python3Full
+		pkgs.lua5_1
+		pkgs.lua51Packages.luarocks
+		pkgs.neovim-node-client
+		pkgs.nodejs_24
+		pkgs.tree-sitter
+		pkgs.wl-clipboard
+		pkgs.fd
+		pkgs.vimPlugins.mason-lspconfig-nvim
+		pkgs.lua51Packages.jsregexp
+		pkgs.mgba
+		pkgs.fzf
+		pkgs.qemu
+		pkgs.kdePackages.k3b
+		pkgs.yt-dlp
+		pkgs.tg
+		pkgs.discordo
 		pkgs.feh
 		pkgs.twitch-tui
 		pkgs.docker
@@ -256,15 +246,16 @@
 		pkgs.oterm
 		pkgs.tintin
 		pkgs.cava
-#		pkgs.neofetch
+		#pkgs.neofetch
 		pkgs.ardour
 		pkgs.nps
 		pkgs.hyprutils
 		pkgs.calc
-		#		inputs.yt-x.packages."${system}".default
-  ];
+		#inputs.yt-x.packages."${system}".default
+	];
+	# }}}
 
-# jargon i guess
+# jargon i guess{{{
 
 #Comments about ssh and the system version
   # Some programs need SUID wrappers, can be configured further or are
@@ -294,4 +285,4 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
 
-}
+}# }}}
