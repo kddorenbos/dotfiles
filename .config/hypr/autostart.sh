@@ -1,10 +1,10 @@
 waybar &
 #hyprpaper &
-swww init &
+awww init &
 sleep 1
-swww-daemon --format xrgb &
+awww-daemon --format xrgb &
 #swww img ~/Downloads/4K-Beautiful-Desktop-Wallpaper-Colorful-Nature-Sunset-Landscape-Free-Download-2048x1152.jpg &
-swww img Backgrounds/$(ls Backgrounds | shuf -n 1)
+awww img Backgrounds/$(ls Backgrounds | shuf -n 1)
 udiskie &
 hyprctl dispatch workspace 1 &
 gammastep -l manual:52.396610811891364:5.302530895614405 -t 6500K:4000K &

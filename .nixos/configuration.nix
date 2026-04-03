@@ -253,6 +253,8 @@
 		pkgs.calc
 		#inputs.yt-x.packages."${system}".default
 		pkgs.warp-terminal
+		pkgs.ghostty
+		pkgs.newsboat
 	];
 	# }}}
 
