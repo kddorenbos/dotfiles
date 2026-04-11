@@ -255,7 +255,6 @@
 		pkgs.warp-terminal
 		pkgs.ghostty
 		pkgs.newsboat
-		pkgs.minecraft
 	];
 	# }}}
 
