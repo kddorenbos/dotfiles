@@ -162,7 +162,7 @@
 		pkgs.kodi
 		pkgs.pulsemixer
 		pkgs.wofi
-		pkgs.ani-cli
+		#		pkgs.ani-cli
 		pkgs.mov-cli
 		pkgs.mpd
 		pkgs.ncmpcpp
@@ -255,6 +255,10 @@
 		pkgs.warp-terminal
 		pkgs.ghostty
 		pkgs.newsboat
+		pkgs.openssl
+		pkgs.superfile
+		pkgs.distrobox
+		pkgs.oxker
 	];
 	# }}}
 
